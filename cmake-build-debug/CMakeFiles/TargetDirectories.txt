@@ -1,0 +1,3 @@
+G:/CLionProjects/CS316LastTask/cmake-build-debug/CMakeFiles/CS316LastTask.dir
+G:/CLionProjects/CS316LastTask/cmake-build-debug/CMakeFiles/edit_cache.dir
+G:/CLionProjects/CS316LastTask/cmake-build-debug/CMakeFiles/rebuild_cache.dir
