@@ -19,15 +19,16 @@ void deleteRecord(fstream &);
 
 void outputLine(ostream &, const ClientData &);
 
-void backupData(fstream &);
+void backupData(fstream &, fstream &);
 
 int getAccount(const char *const);
 
 enum Choices {
-    PRINT = 1, UPDATE, NEW, DELETE, END,BACKUP
+    PRINT = 1, UPDATE, NEW, DELETE, END, BACKUP
 };
 
 int main(int argc, char **argv) {
+    fstream backupFile("backup.dat", ios::out | ios::binary);
     ifstream templ("credit.dat", ios::in | ios::binary);
     if (!templ) {
         ofstream outCredit("credit.dat", ios::out | ios::binary);
@@ -70,7 +71,10 @@ int main(int argc, char **argv) {
                 deleteRecord(inOutCredit);
                 break;
             case BACKUP: // delete existing record
-                backupData(inOutCredit);
+                backupData(inOutCredit, backupFile);
+                break;
+            case 7:
+                createTextFile(backupFile);
                 break;
             default: // display error if user does not select valid choice
                 cerr << "Incorrect choice" << endl;
@@ -88,9 +92,8 @@ int enterChoice() {
          << "2 - update an account" << endl
          << "3 - add a new account" << endl
          << "4 - delete an account" << endl
-         << "5 - end program"<<endl
-         << "6 - Backup\n"
-         ;
+         << "5 - end program" << endl
+         << "6 - Backup\n";
     int menuChoice;
     cin >> menuChoice; // input menu selection from user
     return menuChoice;
@@ -202,8 +205,7 @@ void newRecord(fstream &insertInFile) {
 
 }
 
-void backupData(fstream &inputFile) {
-    ofstream backupFile("backup.dat", ios::out | ios::binary);
+void backupData(fstream &inputFile, fstream &backupFile) {
 
     if (!backupFile) {
         cerr << "File could not be created." << endl;
@@ -220,6 +222,7 @@ void backupData(fstream &inputFile) {
         }
         inputFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     }
+
 }
 
 // delete an existing record
