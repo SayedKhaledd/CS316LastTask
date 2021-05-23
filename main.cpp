@@ -73,9 +73,6 @@ int main(int argc, char **argv) {
             case BACKUP: // delete existing record
                 backupData(inOutCredit, backupFile);
                 break;
-            case 7:
-                createTextFile(backupFile);
-                break;
             default: // display error if user does not select valid choice
                 cerr << "Incorrect choice" << endl;
                 break;
@@ -216,10 +213,8 @@ void backupData(fstream &inputFile, fstream &backupFile) {
     inputFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     while (!inputFile.eof()) {
 
-        if (client.getAccountNumber() != 0) {
-            backupFile.write(reinterpret_cast<const char *> (&client), sizeof(ClientData));
 
-        }
+        backupFile.write(reinterpret_cast<const char *> (&client), sizeof(ClientData));
         inputFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     }
 
