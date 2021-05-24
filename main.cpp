@@ -10,28 +10,37 @@
 #include "SIdx.h"
 #include "SIdx.cpp"
 #include <map>
-#include <vector> 
+#include <vector>
 
 using namespace std;
 
 int enterChoice();
-void createTextFile(fstream&);
-void updateRecord(fstream&);
-void newRecord(fstream&);
-void deleteRecord(fstream&);
-void outputLine(ostream&, const ClientData &);
-int getAccount(const char * const);
 
-void createBackUp(fstream&);
+void createTextFile(fstream &);
+
+void updateRecord(fstream &);
+
+void newRecord(fstream &);
+
+void deleteRecord(fstream &);
+
+void outputLine(ostream &, const ClientData &);
+
+int getAccount(const char *const);
+
+void createBackUp(fstream &);
+
 void restoreBackUp();
-void createIdxsFiles(fstream&);
+
+void createIdxsFiles(fstream &);
+
 void createTextIndexFile();
 
 enum Choices {
     PRINT = 1, UPDATE, NEW, DELETE, BACKUP, RESTORE, CREATEIDXS, CREATETXTIDXSFILES, END
 };
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     ifstream templ("credit.dat", ios::in | ios::binary);
     if (!templ) {
         ofstream outCredit("credit.dat", ios::out | ios::binary);
@@ -43,7 +52,7 @@ int main(int argc, char** argv) {
         ClientData blankClient; // constructor zeros out each data member
         // output 100 blank records to file
         for (int i = 0; i < 100; ++i)
-            outCredit.write(reinterpret_cast<const char *> (&blankClient), sizeof ( ClientData));
+            outCredit.write(reinterpret_cast<const char *> (&blankClient), sizeof(ClientData));
 
         outCredit.close();
     };
@@ -76,7 +85,7 @@ int main(int argc, char** argv) {
             case BACKUP: // store data into  backup file
                 createBackUp(inOutCredit);
                 break;
-            case RESTORE: // restore data from backup file 
+            case RESTORE: // restore data from backup file
                 restoreBackUp();
                 break;
             case CREATEIDXS: // delete existing record
@@ -96,16 +105,16 @@ int main(int argc, char** argv) {
 int enterChoice() {
     // display available options
     cout << "\nEnter your choice" << endl
-            << "1 - store a formatted text file of accounts" << endl
-            << " called \"print.txt\" for printing" << endl
-            << "2 - update an account" << endl
-            << "3 - add a new account" << endl
-            << "4 - delete an account" << endl
-            << "5 - Backup Data" << endl
-            << "6 - Restore Data" << endl
-            << "7 - Create Index Files" << endl
-            << "8 - Create text files for Index Files" << endl
-            << "9 - end program\n? ";
+         << "1 - store a formatted text file of accounts" << endl
+         << " called \"print.txt\" for printing" << endl
+         << "2 - update an account" << endl
+         << "3 - add a new account" << endl
+         << "4 - delete an account" << endl
+         << "5 - Backup Data" << endl
+         << "6 - Restore Data" << endl
+         << "7 - Create Index Files" << endl
+         << "8 - Create text files for Index Files" << endl
+         << "9 - end program\n? ";
     int menuChoice;
     cin >> menuChoice; // input menu selection from user
     return menuChoice;
@@ -123,8 +132,8 @@ void createTextFile(fstream &readFromFile) {
 
     // output column heads
     outPrintFile << left << setw(10) << "Account" << setw(16)
-            << "Last Name" << setw(11) << "First Name" << right
-            << setw(10) << "Balance" << setw(10) << "BranchID" << endl;
+                 << "Last Name" << setw(11) << "First Name" << right
+                 << setw(10) << "Balance" << setw(10) << "BranchID" << endl;
 
     // set file-position pointer to beginning of readFromFile
     readFromFile.seekg(0);
@@ -132,16 +141,14 @@ void createTextFile(fstream &readFromFile) {
     // read first record from record file
     ClientData client;
 
-    readFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+    readFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     // copy all records from record file into text file
     while (!readFromFile.eof()) {
         // write single record to text file
         if (client.getAccountNumber() != 0) // skip empty records
-
-
             outputLine(outPrintFile, client);
         // read next record from record file
-        readFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+        readFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     } // end while
 } // end function createTextFile
 
@@ -150,11 +157,11 @@ void updateRecord(fstream &updateFile) {
     int accountNumber = getAccount("Enter account to update");
 
     // move file-position pointer to correct record in file
-    updateFile.seekg((accountNumber - 1) * sizeof ( ClientData));
+    updateFile.seekg((accountNumber - 1) * sizeof(ClientData));
 
     // read first record from file
     ClientData client;
-    updateFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+    updateFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
 
     // update record
     if (client.getAccountNumber() != 0) {
@@ -168,9 +175,9 @@ void updateRecord(fstream &updateFile) {
         client.setBalance(oldBalance + transaction);
         outputLine(cout, client); // display the record
         // move file-position pointer to correct record in file
-        updateFile.seekp((accountNumber - 1) * sizeof ( ClientData));
+        updateFile.seekp((accountNumber - 1) * sizeof(ClientData));
         // write updated record over old record in file
-        updateFile.write(reinterpret_cast<const char *> (&client), sizeof ( ClientData));
+        updateFile.write(reinterpret_cast<const char *> (&client), sizeof(ClientData));
     } else { // display error if account does not exist
         cerr << "Account #" << accountNumber << " has no information." << endl;
     }
@@ -181,10 +188,10 @@ void newRecord(fstream &insertInFile) {
     int accountNumber = getAccount("Enter new account number");
 
     // move file-position pointer to correct record in file
-    insertInFile.seekg((accountNumber - 1) * sizeof ( ClientData));
+    insertInFile.seekg((accountNumber - 1) * sizeof(ClientData));
     // read record from file
     ClientData client;
-    insertInFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+    insertInFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
 
     // create record, if record does not previously
     if (client.getAccountNumber() == 0) {
@@ -205,9 +212,9 @@ void newRecord(fstream &insertInFile) {
         client.setBranchID(branchId);
         client.setAccountNumber(accountNumber);
         // move file-position pointer to correct record in file
-        insertInFile.seekp((accountNumber - 1) * sizeof ( ClientData));
+        insertInFile.seekp((accountNumber - 1) * sizeof(ClientData));
         // insert record in file
-        insertInFile.write(reinterpret_cast<const char *> (&client), sizeof ( ClientData));
+        insertInFile.write(reinterpret_cast<const char *> (&client), sizeof(ClientData));
     } else { // display error if account already exists
         cerr << "Account #" << accountNumber << " already contains information." << endl;
     }
@@ -219,20 +226,20 @@ void deleteRecord(fstream &deleteFromFile) {
     int accountNumber = getAccount("Enter account to delete");
 
     // move file-position pointer to correct record in file
-    deleteFromFile.seekg((accountNumber - 1) * sizeof ( ClientData));
+    deleteFromFile.seekg((accountNumber - 1) * sizeof(ClientData));
 
     // read record from file
     ClientData client;
-    deleteFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+    deleteFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
 
     // delete record, if record exists in file
     if (client.getAccountNumber() != 0) {
         ClientData blankClient; // create blank record
 
         // move file-position pointer to correct record in file
-        deleteFromFile.seekp((accountNumber - 1) * sizeof ( ClientData));
+        deleteFromFile.seekp((accountNumber - 1) * sizeof(ClientData));
         // replace existing record with blank record
-        deleteFromFile.write(reinterpret_cast<const char *> (&blankClient), sizeof ( ClientData));
+        deleteFromFile.write(reinterpret_cast<const char *> (&blankClient), sizeof(ClientData));
         cout << "Account #" << accountNumber << " deleted.\n";
     } else { // display error if record does not exist
         cerr << "Account #" << accountNumber << " is empty.\n";
@@ -241,14 +248,14 @@ void deleteRecord(fstream &deleteFromFile) {
 
 void outputLine(ostream &output, const ClientData &record) {
     output << left << setw(10) << record.getAccountNumber()
-            << setw(16) << record.getLastName()
-            << setw(11) << record.getFirstName()
-            << setw(10) << setprecision(2) << right << fixed
-            << showpoint << record.getBalance()
-            << setw(10) << record.getBranchID() << endl;
+           << setw(16) << record.getLastName()
+           << setw(11) << record.getFirstName()
+           << setw(10) << setprecision(2) << right << fixed
+           << showpoint << record.getBalance()
+           << setw(10) << record.getBranchID() << endl;
 }
 
-int getAccount(const char * const prompt) {
+int getAccount(const char *const prompt) {
     int accountNumber;
     // obtain account-number value
     do {
@@ -270,15 +277,15 @@ void createBackUp(fstream &readFromFile) {
 
     ClientData client;
     ClientData blankClient;
-    readFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+    readFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
 
     while (!readFromFile.eof()) {
-      /*  if (client.getAccountNumber() != 0) {*/
-            backupFile.write(reinterpret_cast<const char *> (&client), sizeof ( ClientData));
-         /*}else {
-            backupFile.write(reinterpret_cast<const char *> (&blankClient), sizeof ( ClientData));
-        }*/
-        readFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+        /*  if (client.getAccountNumber() != 0) {*/
+        backupFile.write(reinterpret_cast<const char *> (&client), sizeof(ClientData));
+        /*}else {
+           backupFile.write(reinterpret_cast<const char *> (&blankClient), sizeof ( ClientData));
+       }*/
+        readFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     }
 
     backupFile.close();
@@ -301,23 +308,21 @@ void restoreBackUp() {
         backupFile.seekg(0);
         ClientData client;
         ClientData blankClient;
-        backupFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+        backupFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
 
         while (!backupFile.eof()) {
-          /*  if (client.getAccountNumber() != 0) {*/
-                creditFile.write(reinterpret_cast<const char *> (&client), sizeof ( ClientData));
+            /*  if (client.getAccountNumber() != 0) {*/
+            creditFile.write(reinterpret_cast<const char *> (&client), sizeof(ClientData));
             /*} else {*/
-             //   creditFile.write(reinterpret_cast<const char *> (&blankClient), sizeof ( ClientData));
-           /* }*/
+            //   creditFile.write(reinterpret_cast<const char *> (&blankClient), sizeof ( ClientData));
+            /* }*/
 
-            backupFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+            backupFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
         }
 
         creditFile.close();
         printf("Data restored successfully \n");
     }
-
-
 
 
 }
@@ -332,19 +337,19 @@ void createIdxsFiles(fstream &readFromFile) {
     readFromFile.seekg(0);
     ClientData client;
     ClientData blankClient;
-    readFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+    readFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     PIdx currRecord;
-    
+
     // store data in primary_index.dat, each entry as pair: client account number  & byteoffset field of the corresponding record
 
-    map<string, vector< int >> m;
+    map<string, vector<int >> m;
 
     while (!readFromFile.eof()) {
         int accountNumber = client.getAccountNumber();
-        int byteOffset = (accountNumber - 1) * sizeof ( ClientData);
+        int byteOffset = (accountNumber - 1) * sizeof(ClientData);
         currRecord.setAccountNumber(accountNumber);
         currRecord.setOffset(byteOffset);
-        primaryIdxFile.write(reinterpret_cast<const char *> (&currRecord), sizeof ( PIdx));
+        primaryIdxFile.write(reinterpret_cast<const char *> (&currRecord), sizeof(PIdx));
 
         if (accountNumber != 0) {
             string lastNm = client.getLastName();
@@ -353,13 +358,13 @@ void createIdxsFiles(fstream &readFromFile) {
                 //    printf(" founded before %d \n", accountNumber);
                 itr->second.push_back(accountNumber);
             } else {
-                vector< int > accNums;
+                vector<int> accNums;
                 accNums.push_back(accountNumber);
                 // printf("not founded before %d \n", accNums.at(0));
-                m.insert(pair<string, vector< int >> (lastNm, accNums));
+                m.insert(pair<string, vector<int >>(lastNm, accNums));
             }
         }
-        readFromFile.read(reinterpret_cast<char *> (&client), sizeof ( ClientData));
+        readFromFile.read(reinterpret_cast<char *> (&client), sizeof(ClientData));
     }
 
     primaryIdxFile.close();
@@ -373,11 +378,11 @@ void createIdxsFiles(fstream &readFromFile) {
 
     while (it != m.end()) {
         string lastN = it->first;
-        vector< int > acNums = it->second;
+        vector<int> acNums = it->second;
 
-        int * p = reinterpret_cast<int *> (&lastN);
-        string* c = reinterpret_cast<string*> (p);
-        
+        int *p = reinterpret_cast<int *> (&lastN);
+        string *c = reinterpret_cast<string *> (p);
+
         outPrintFile << setw(15) << left << *c;
         vector<int>::iterator itt;
         int counter = 0;
@@ -410,15 +415,15 @@ void createTextIndexFile() {
     readFromFile.seekg(0);
 
     PIdx pIdx;
-    readFromFile.read(reinterpret_cast<char *> (&pIdx), sizeof ( PIdx));
+    readFromFile.read(reinterpret_cast<char *> (&pIdx), sizeof(PIdx));
     // copy all records from record file into text file
     while (!readFromFile.eof()) {
         // write single record to text file
 
         outPrintFile << left << setw(10) << pIdx.getAccountNumber()
-                << setw(16) << pIdx.getOffset() << endl;
+                     << setw(16) << pIdx.getOffset() << endl;
         // read next record from record file
-        readFromFile.read(reinterpret_cast<char *> (&pIdx), sizeof ( PIdx));
+        readFromFile.read(reinterpret_cast<char *> (&pIdx), sizeof(PIdx));
     }
 
 

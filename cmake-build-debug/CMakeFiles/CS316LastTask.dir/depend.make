@@ -3,5 +3,9 @@
 
 CMakeFiles/CS316LastTask.dir/main.cpp.o: ../ClientData.cpp
 CMakeFiles/CS316LastTask.dir/main.cpp.o: ../ClientData.h
+CMakeFiles/CS316LastTask.dir/main.cpp.o: ../PIdx.cpp
+CMakeFiles/CS316LastTask.dir/main.cpp.o: ../PIdx.h
+CMakeFiles/CS316LastTask.dir/main.cpp.o: ../SIdx.cpp
+CMakeFiles/CS316LastTask.dir/main.cpp.o: ../SIdx.h
 CMakeFiles/CS316LastTask.dir/main.cpp.o: ../main.cpp
 

@@ -1,12 +1,13 @@
 #include <string>
 #include "ClientData.h"
 #include "PIdx.h"
+
 using namespace std;
 
 // default ClientData constructor
 
 PIdx::PIdx(int accountNumberValue, int offsetValue)
-: accountNumber(accountNumberValue), offset(offsetValue) {
+        : accountNumber(accountNumberValue), offset(offsetValue) {
 
 } // end ClientData constructor
 
