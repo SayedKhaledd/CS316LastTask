@@ -6,13 +6,12 @@
 class ClientData {
 public:
     // default ClientData constructor
-    ClientData(int = 0, const std::string & = "", const std::string & = "", double = 0.0);
+    ClientData(int = 0,int = 0, const std::string & = "", const std::string & = "", double = 0.0);
 
     // accessor functions for accountNumber
     void setAccountNumber(int);
     int getAccountNumber() const;
-
-    // accessor functions for branchID
+    
     void setBranchID(int);
     int getBranchID() const;
 

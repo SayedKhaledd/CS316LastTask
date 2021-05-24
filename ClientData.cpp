@@ -1,12 +1,11 @@
 #include <string>
 #include "ClientData.h"
-
 using namespace std;
 
 // default ClientData constructor
 
-ClientData::ClientData(int accountNumberValue, const string &lastName, const string &firstName, double balanceValue)
-        : accountNumber(accountNumberValue), balance(balanceValue) {
+ClientData::ClientData(int accountNumberValue, int branchIDValue,const string &lastName, const string &firstName, double balanceValue)
+: accountNumber(accountNumberValue), balance(balanceValue),branchID(branchIDValue) {
     setLastName(lastName);
     setFirstName(firstName);
 } // end ClientData constructor
@@ -23,17 +22,18 @@ void ClientData::setAccountNumber(int accountNumberValue) {
     accountNumber = accountNumberValue; // should validate
 } // end function setAccountNumber
 
-// get branchID value
-
 int ClientData::getBranchID() const {
     return branchID;
-} // end function getBranchID
+} // end function getAccountNumber
 
-// set branchID-number value
+// set account-number value
 
-void ClientData::setBranchID(int branchIdValue) {
-    branchID = branchIdValue; // should validate
-} // end function setBranchID
+void ClientData::setBranchID(int branchIDValue) {
+    branchID = branchIDValue; // should validate
+} // end function setAccountNumber
+
+
+
 
 // get last-name value
 
@@ -49,7 +49,7 @@ void ClientData::setLastName(const string &lastNameString) {
     int length = lastNameString.size();
     length = (length < 15 ? length : 14);
     lastNameString.copy(lastName, length);
-    lastName[length] = '\0'; // append null character to lastName
+    lastName[ length ] = '\0'; // append null character to lastName
 } // end function setLastName
 
 // get first-name value
@@ -64,8 +64,8 @@ void ClientData::setFirstName(const string &firstNameString) {
     // copy at most 10 characters from string to firstName
     int length = firstNameString.size();
     length = (length < 10 ? length : 9);
-    firstNameString.copy(firstName, length);
-    firstName[length] = '\0'; // append null character to firstName
+    firstNameString.copy( firstName, length );
+    firstName[ length ] = '\0'; // append null character to firstName
 } // end function setFirstName
 // get balance value
 

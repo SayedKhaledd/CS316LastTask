@@ -1,7 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/CS316LastTask.dir/main.cpp.obj"
+  "CMakeFiles/CS316LastTask.dir/main.cpp.o"
   "CS316LastTask.exe"
-  "CS316LastTask.exe.manifest"
   "CS316LastTask.pdb"
   "libCS316LastTask.dll.a"
 )
